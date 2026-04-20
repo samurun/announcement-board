@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/.turbo
+**/coverage
+.git
+.github
+.vscode
+.idea
+.DS_Store
+*.log
+.env.local
+.env.*.local
