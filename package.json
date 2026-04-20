@@ -1,10 +1,13 @@
 {
   "name": "announcement-board",
+  "description": "A simple announcement board application built with a Node.js API and a React frontend.",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "dev:api": "turbo run dev --filter=@workspace/api",
+    "dev:web": "turbo run dev --filter=@workspace/web",
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck"
