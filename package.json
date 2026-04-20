@@ -6,8 +6,8 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "dev:api": "turbo run dev --filter=@workspace/api",
-    "dev:web": "turbo run dev --filter=@workspace/web",
+    "dev:api": "turbo run dev --filter=api",
+    "dev:web": "turbo run dev --filter=web",
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck"
