@@ -34,7 +34,7 @@ export function RegisterForm() {
 
   const onSubmit = (data: RegisterT) => {
     register.mutate(data, {
-      onSuccess: () => navigate("/announcements", { replace: true }),
+      onSuccess: () => navigate("/", { replace: true }),
     })
   }
 

@@ -34,7 +34,7 @@ export function LoginForm() {
 
   const onSubmit = (data: LoginT) => {
     login.mutate(data, {
-      onSuccess: () => navigate("/announcements", { replace: true }),
+      onSuccess: () => navigate("/", { replace: true }),
     })
   }
 
