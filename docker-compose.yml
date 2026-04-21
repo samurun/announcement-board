@@ -61,7 +61,7 @@ services:
     depends_on:
       - api
     ports:
-      - "${WEB_PORT}:3000"
+      - "${WEB_PORT}:${WEB_PORT}"
 
 volumes:
   db_data:
