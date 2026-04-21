@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express"
+import { AppError } from "../../lib/errors.js"
 import { verifyToken } from "./crypto.js"
-import { AppError } from "./service.js"
 
 declare global {
   namespace Express {

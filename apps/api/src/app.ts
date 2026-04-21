@@ -4,6 +4,7 @@ import cors from "cors"
 import swaggerUi from "swagger-ui-express"
 import { env } from "./env.js"
 import { swaggerSpec } from "./docs/swagger.js"
+import { errorHandler } from "./middleware/error-handler.js"
 import { systemRoutes } from "./modules/system/system.routes.js"
 import { authRoutes } from "./modules/auth/router.js"
 
@@ -22,6 +23,9 @@ export function buildApp(): Express {
   // Routes
   app.use("/", systemRoutes)
   app.use("/auth", authRoutes)
+
+  // Error handling
+  app.use(errorHandler)
 
   return app
 }

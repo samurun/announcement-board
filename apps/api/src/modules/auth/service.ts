@@ -1,16 +1,7 @@
 import { db } from "@workspace/db"
+import { AppError } from "../../lib/errors.js"
 import { hashPassword, signToken, verifyPassword } from "./crypto.js"
 import type { LoginInput, RegisterInput } from "./schema.js"
-
-export class AppError extends Error {
-  constructor(
-    public statusCode: number,
-    message: string
-  ) {
-    super(message)
-    this.name = "AppError"
-  }
-}
 
 type DbUser = {
   id: string

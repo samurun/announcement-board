@@ -1,19 +1,9 @@
 import { Router } from "express"
-import type {
-  NextFunction,
-  Request,
-  Response,
-  Router as RouterType,
-} from "express"
-import { ZodError } from "zod"
+import type { Router as RouterType } from "express"
+import { AppError } from "../../lib/errors.js"
 import { requireAuth } from "./middleware.js"
 import { loginSchema, registerSchema } from "./schema.js"
-import {
-  AppError,
-  getUserById,
-  loginUser,
-  registerUser,
-} from "./service.js"
+import { getUserById, loginUser, registerUser } from "./service.js"
 
 export const authRoutes: RouterType = Router()
 
@@ -128,20 +118,3 @@ authRoutes.get("/me", requireAuth, async (req, res, next) => {
   }
 })
 
-authRoutes.use(
-  (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-    if (err instanceof ZodError) {
-      res.status(400).json({
-        message: "Validation failed",
-        errors: err.flatten().fieldErrors,
-      })
-      return
-    }
-    if (err instanceof AppError) {
-      res.status(err.statusCode).json({ message: err.message })
-      return
-    }
-    console.error("Unexpected auth error:", err)
-    res.status(500).json({ message: "Internal server error" })
-  }
-)

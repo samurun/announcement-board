@@ -15,6 +15,9 @@ vi.mock("@workspace/db", () => ({
 }))
 
 const { authRoutes } = await import("../../src/modules/auth/router.js")
+const { errorHandler } = await import(
+  "../../src/middleware/error-handler.js"
+)
 const { hashPassword, signToken } =
   await import("../../src/modules/auth/crypto.js")
 
@@ -22,6 +25,7 @@ function makeApp() {
   const app = express()
   app.use(express.json())
   app.use("/auth", authRoutes)
+  app.use(errorHandler)
   return app
 }
 
