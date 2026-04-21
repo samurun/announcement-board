@@ -9,7 +9,7 @@ export function BoardPage() {
   const { data: announcements, isLoading, error } = useAnnouncements()
 
   return (
-    <div className="min-h-svh bg-background p-4">
+    <div className="min-h-svh p-4">
       <div className="mx-auto max-w-2xl">
         <div className="mb-6 flex items-center justify-between">
           <div>
