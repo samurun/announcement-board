@@ -16,6 +16,13 @@ const options: swaggerJsdoc.Options = {
       { url: `http://localhost:${env.API_PORT}`, description: "Local dev" },
     ],
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
       schemas: {
         Health: {
           type: "object",
@@ -25,6 +32,79 @@ const options: swaggerJsdoc.Options = {
             db: { type: "string", enum: ["up", "down"] },
             timestamp: { type: "string", format: "date-time" },
             error: { type: "string" },
+          },
+        },
+        RegisterInput: {
+          type: "object",
+          required: ["email", "password", "name"],
+          properties: {
+            email: { type: "string", format: "email" },
+            password: { type: "string", minLength: 6 },
+            name: { type: "string", minLength: 2 },
+          },
+        },
+        LoginInput: {
+          type: "object",
+          required: ["email", "password"],
+          properties: {
+            email: { type: "string", format: "email" },
+            password: { type: "string", minLength: 1 },
+          },
+        },
+        AuthResponse: {
+          type: "object",
+          required: ["user", "token"],
+          properties: {
+            user: {
+              type: "object",
+              required: ["id", "email", "name"],
+              properties: {
+                id: { type: "string" },
+                email: { type: "string", format: "email" },
+                name: { type: "string" },
+              },
+            },
+            token: { type: "string" },
+          },
+        },
+        MeResponse: {
+          type: "object",
+          required: ["user"],
+          properties: {
+            user: {
+              type: "object",
+              required: ["id", "email", "name"],
+              properties: {
+                id: { type: "string" },
+                email: { type: "string", format: "email" },
+                name: { type: "string" },
+              },
+            },
+          },
+        },
+        ValidationError: {
+          type: "object",
+          required: ["message", "errors"],
+          properties: {
+            message: { type: "string", example: "Validation failed" },
+            errors: {
+              type: "object",
+              additionalProperties: {
+                type: "array",
+                items: { type: "string" },
+              },
+              example: {
+                email: ["Invalid email address"],
+                password: ["Password must be at least 6 characters"],
+              },
+            },
+          },
+        },
+        ErrorResponse: {
+          type: "object",
+          required: ["message"],
+          properties: {
+            message: { type: "string" },
           },
         },
       },
