@@ -14,7 +14,28 @@ docker compose up --build
 Open http://localhost:5173. The API runs `prisma migrate deploy` on boot.
 
 Local dev: `docker compose up db -d && pnpm install && pnpm dev` (api :4000, web :5173).
-Tests: `pnpm --filter api test`.
+
+## Tests
+
+```bash
+pnpm test        # run api + web (via Turbo)
+pnpm test:api    # api only
+pnpm test:web    # web only
+```
+
+Stack: **Vitest** everywhere, **Supertest** for API route tests.
+
+| Suite | Path | Covers |
+| --- | --- | --- |
+| `api/auth/crypto` | `apps/api/tests/auth/crypto.test.ts` | argon2 hash/verify, JWT sign/verify, expiry + bad-signature rejection |
+| `api/auth/schema` | `apps/api/tests/auth/schema.test.ts` | Zod register/login input validation (required fields, email shape, min length) |
+| `api/auth/service` | `apps/api/tests/auth/service.test.ts` | register (409 on duplicate), login (401 on wrong password), `getUserById` strips `passwordHash` |
+| `api/auth/middleware` | `apps/api/tests/auth/middleware.test.ts` | `requireAuth` — 401 on missing/malformed/expired token, attaches `req.user` on valid |
+| `api/auth/router` | `apps/api/tests/auth/router.test.ts` | End-to-end register/login/me via Supertest, including validation and auth-required paths |
+| `api/announcements/router` | `apps/api/tests/announcements/router.test.ts` | Auth gate on every route, pinned-first ordering, author-derived-from-token (403 on spoof), 403/404 on update/delete, 400 on empty body |
+| `api/smoke` | `apps/api/tests/smoke.test.ts` | `GET /health` reports db status |
+| `web/auth/schemas` | `apps/web/src/features/auth/schemas.test.ts` | Client-side login/register Zod schemas |
+| `web/announcements/schemas` | `apps/web/src/features/announcements/schemas.test.ts` | create/update schema — required fields, pinned optional, update as partial |
 
 ## API
 
@@ -53,6 +74,6 @@ Errors: `400` validation, `401` no/bad token, `403` not the author, `404` not fo
 
 ## With more time
 
-- Announcement-specific integration tests (pinned ordering, 403 author-guard, 400 validation, 404).
 - Pagination on `GET /announcements`.
 - Optimistic create/delete.
+- Component-level tests on the web side (dialog flows, cache invalidation).
