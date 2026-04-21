@@ -3,17 +3,20 @@ import { createRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router"
 
 import "@workspace/ui/globals.css"
-import { App } from "./App.js"
+import { App } from "./App"
 import { ThemeProvider } from "@/components/theme-provider.tsx"
-import { AuthProvider } from "./features/auth/context/AuthContext.js"
+import { hydrateAuthCache } from "./features/auth/hydrate"
+import Providers from "./providers"
+
+hydrateAuthCache()
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <AuthProvider>
+        <Providers>
           <App />
-        </AuthProvider>
+        </Providers>
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
