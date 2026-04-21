@@ -6,6 +6,7 @@ import { env } from "./env.js"
 import { swaggerSpec } from "./docs/swagger.js"
 import { errorHandler } from "./middleware/error-handler.js"
 import { systemRoutes } from "./modules/system/system.routes.js"
+import { announcementsRoutes } from "./modules/announcements/router.js"
 import { authRoutes } from "./modules/auth/router.js"
 
 export function buildApp(): Express {
@@ -23,6 +24,7 @@ export function buildApp(): Express {
   // Routes
   app.use("/", systemRoutes)
   app.use("/auth", authRoutes)
+  app.use("/announcements", announcementsRoutes)
 
   // Error handling
   app.use(errorHandler)

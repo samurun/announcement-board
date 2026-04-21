@@ -82,6 +82,46 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
+        Announcement: {
+          type: "object",
+          required: [
+            "id",
+            "title",
+            "body",
+            "author",
+            "authorId",
+            "pinned",
+            "createdAt",
+            "updatedAt",
+          ],
+          properties: {
+            id: { type: "string" },
+            title: { type: "string" },
+            body: { type: "string" },
+            author: { type: "string" },
+            authorId: { type: "string" },
+            pinned: { type: "boolean" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        AnnouncementResponse: {
+          type: "object",
+          required: ["announcement"],
+          properties: {
+            announcement: { $ref: "#/components/schemas/Announcement" },
+          },
+        },
+        AnnouncementsResponse: {
+          type: "object",
+          required: ["announcements"],
+          properties: {
+            announcements: {
+              type: "array",
+              items: { $ref: "#/components/schemas/Announcement" },
+            },
+          },
+        },
         ValidationError: {
           type: "object",
           required: ["message", "errors"],
