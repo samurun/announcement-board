@@ -74,6 +74,7 @@ Errors: `400` validation, `401` no/bad token, `403` not the author, `404` not fo
 
 ## With more time
 
+- Shared types package — single Zod source of truth for API DTOs + client types.
 - Pagination on `GET /announcements`.
 - Optimistic create/delete.
 - Component-level tests on the web side (dialog flows, cache invalidation).
