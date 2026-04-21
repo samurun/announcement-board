@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { loginSchema, registerSchema } from "./schemas.js"
+import { loginSchema, registerSchema } from "./schemas"
 
 describe("loginSchema", () => {
   it("accepts valid input", () => {
@@ -103,7 +103,6 @@ describe("registerSchema", () => {
     const result = registerSchema.safeParse({})
     expect(result.success).toBe(false)
     const errors = result.error?.issues
-    console.log("Validation errors:", errors)
     expect(errors).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

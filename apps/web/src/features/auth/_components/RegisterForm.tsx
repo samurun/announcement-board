@@ -14,33 +14,28 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
-import { useState } from "react"
+import { isAxiosError } from "axios"
 import { Controller, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router"
-import { useAuth } from "../context/AuthContext.js"
+import { useRegister } from "../hooks/useRegister"
 import { registerSchema, type RegisterInput as RegisterT } from "../schemas.js"
 
 export function RegisterForm() {
   const navigate = useNavigate()
-  const { register: registerUser } = useAuth()
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const register = useRegister()
+  const errorMessage =
+    register.error && isAxiosError<{ message?: string }>(register.error)
+      ? (register.error.response?.data?.message ?? "Registration failed")
+      : null
 
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<RegisterT>({
+  const { control, handleSubmit } = useForm<RegisterT>({
     resolver: zodResolver(registerSchema),
   })
 
-  const onSubmit = async (data: RegisterT) => {
-    setSubmitError(null)
-    try {
-      await registerUser(data.email, data.password, data.name)
-      navigate("/announcements", { replace: true })
-    } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : "Registration failed")
-    }
+  const onSubmit = (data: RegisterT) => {
+    register.mutate(data, {
+      onSuccess: () => navigate("/announcements", { replace: true }),
+    })
   }
 
   return (
@@ -110,21 +105,21 @@ export function RegisterForm() {
                 </Field>
               )}
             />
-            {submitError && (
+            {errorMessage && (
               <div
                 role="alert"
                 className="rounded bg-red-50 p-3 text-sm text-red-600"
               >
-                {submitError}
+                {errorMessage}
               </div>
             )}
             <Field>
               <Button
                 type="submit"
                 form="register-form"
-                disabled={isSubmitting}
+                disabled={register.isPending}
               >
-                {isSubmitting ? "Creating account..." : "Register"}
+                {register.isPending ? "Creating account..." : "Register"}
               </Button>
               <FieldDescription className="text-center">
                 Already have an account?{" "}

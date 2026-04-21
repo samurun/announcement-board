@@ -14,33 +14,28 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
-import { useState } from "react"
+import { isAxiosError } from "axios"
 import { Controller, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router"
-import { useAuth } from "../context/AuthContext.js"
-import { loginSchema, type LoginInput as LoginT } from "../schemas.js"
+import { useLogin } from "../hooks/useLogin"
+import { loginSchema, type LoginInput as LoginT } from "../schemas"
 
 export function LoginForm() {
   const navigate = useNavigate()
-  const { login } = useAuth()
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const login = useLogin()
+  const errorMessage =
+    login.error && isAxiosError<{ message?: string }>(login.error)
+      ? (login.error.response?.data?.message ?? "Login failed")
+      : null
 
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<LoginT>({
+  const { control, handleSubmit } = useForm<LoginT>({
     resolver: zodResolver(loginSchema),
   })
 
-  const onSubmit = async (data: LoginT) => {
-    setSubmitError(null)
-    try {
-      await login(data.email, data.password)
-      navigate("/announcements", { replace: true })
-    } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : "Login failed")
-    }
+  const onSubmit = (data: LoginT) => {
+    login.mutate(data, {
+      onSuccess: () => navigate("/announcements", { replace: true }),
+    })
   }
 
   return (
@@ -92,17 +87,21 @@ export function LoginForm() {
                 </Field>
               )}
             />
-            {submitError && (
+            {errorMessage && (
               <div
                 role="alert"
                 className="rounded bg-red-50 p-3 text-sm text-red-600"
               >
-                {submitError}
+                {errorMessage}
               </div>
             )}
             <Field>
-              <Button type="submit" form="login-form" disabled={isSubmitting}>
-                {isSubmitting ? "Logging in..." : "Login"}
+              <Button
+                type="submit"
+                form="login-form"
+                disabled={login.isPending}
+              >
+                {login.isPending ? "Logging in..." : "Login"}
               </Button>
               <FieldDescription className="text-center">
                 Don&apos;t have an account?{" "}
