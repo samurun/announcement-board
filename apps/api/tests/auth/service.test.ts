@@ -12,13 +12,11 @@ vi.mock("@workspace/db", () => ({
   },
 }))
 
-const { getUserById, loginUser, registerUser } = await import(
-  "../../src/modules/auth/service.js"
-)
+const { getUserById, loginUser, registerUser } =
+  await import("../../src/modules/auth/service.js")
 const { AppError } = await import("../../src/lib/errors.js")
-const { hashPassword, verifyToken } = await import(
-  "../../src/modules/auth/crypto.js"
-)
+const { hashPassword, verifyToken } =
+  await import("../../src/modules/auth/crypto.js")
 
 const baseUser = {
   id: "user-1",
